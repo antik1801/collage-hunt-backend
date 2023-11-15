@@ -1,3 +1,6 @@
+const { MongoClient, ServerApiVersion  } = require("mongodb")
+const uri = "mongodb+srv://collageHunt:tFyAxb9G0pIW86pz@cluster0.zycuvps.mongodb.net/?retryWrites=true&w=majority";
+
 
 const getAllCollages = (req, res) =>{
     try {

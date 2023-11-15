@@ -2,7 +2,7 @@ const express = require('express')
 const app = express();
 const cors = require('cors')
 const bodyPerser = require('body-parser')
-const collageRoutes = require('./routes/collages.route')
+// const collageRoutes = require('./routes/collages.route')
 require('dotenv').config()
 
 
@@ -17,6 +17,61 @@ app.use(express.json())
 // api/research : get - get all research information
 
 
+const { MongoClient, ServerApiVersion } = require('mongodb');
+const uri = "mongodb+srv://collageHunt:tFyAxb9G0pIW86pz@cluster0.zycuvps.mongodb.net/?retryWrites=true&w=majority";
+// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+const client = new MongoClient(uri, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  }
+});
+async function run() {
+  try {
+    // Connect the client to the server	(optional starting in v4.7)
+    // await client.connect();
+    // Send a ping to confirm a successful connection
+    const collageCollection = client.db("collageHunt").collection("collages")
+
+    // get all collages
+
+    app.get("/collages", async(req, res) => {
+        try {
+            const result = await collageCollection.find().toArray()
+            res.status(200).send(result)
+        } catch (error) {
+            res.status(404).send({
+                status: 404,
+                message: error.message
+            })
+        }
+    })
+
+    // get a specific collage
+    app.get("/collages/:id", async(req,res)=>{
+        try {
+            const id = req.params.id;
+             res.send(`This is the details of ${id}`)
+        } catch (error) {
+            res.status(404).send(error.message);
+        }
+    })
+    
+    await client.db("admin").command({ ping: 1 });
+    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+  } finally {
+    // Ensures that the client will close when you finish/error
+    // await client.close();
+  }
+}
+run().catch(console.dir);
+
+
+
+
+
+
 // collage routes
 
 app.get("/", (req,res) =>{
@@ -24,7 +79,7 @@ app.get("/", (req,res) =>{
 })
 
 
-app.use("/api/collages", collageRoutes)
+// app.use("/api/collages", collageRoutes)
 
 //! Error Router not found
 
