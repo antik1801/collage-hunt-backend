@@ -17,7 +17,7 @@ app.use(express.json())
 // api/research : get - get all research information
 
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = "mongodb+srv://collageHunt:tFyAxb9G0pIW86pz@cluster0.zycuvps.mongodb.net/?retryWrites=true&w=majority";
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -53,7 +53,9 @@ async function run() {
     app.get("/collages/:id", async(req,res)=>{
         try {
             const id = req.params.id;
-             res.send(`This is the details of ${id}`)
+            const query = { _id: new ObjectId(id) }
+            const result = await collageCollection.findOne(query);
+             res.send(result)
         } catch (error) {
             res.status(404).send(error.message);
         }
@@ -72,7 +74,9 @@ async function run() {
     app.get("/research/:id", async(req,res)=>{
         try {
             const id = req.params.id;
-            res.status(200).send(`This is the research paper for ${id}`);
+            const query = { _id: new ObjectId(id) }
+            const result = await researchCollection.findOne(query)
+            res.status(200).send(result);
         } catch (error) {
             res.status(404).send(error.message);
         }
