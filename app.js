@@ -33,6 +33,7 @@ async function run() {
     // await client.connect();
     // Send a ping to confirm a successful connection
     const collageCollection = client.db("collageHunt").collection("collages")
+    const researchCollection = client.db("collageHunt").collection("researches")
 
     // get all collages
 
@@ -53,6 +54,16 @@ async function run() {
         try {
             const id = req.params.id;
              res.send(`This is the details of ${id}`)
+        } catch (error) {
+            res.status(404).send(error.message);
+        }
+    })
+
+    // get all research papers
+    app.get("/research", async(req, res) =>{
+        try {
+            const result = await researchCollection.find().toArray();
+            res.status(200).send(result)
         } catch (error) {
             res.status(404).send(error.message);
         }
