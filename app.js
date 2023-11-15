@@ -68,6 +68,15 @@ async function run() {
             res.status(404).send(error.message);
         }
     })
+
+    app.get("/research/:id", async(req,res)=>{
+        try {
+            const id = req.params.id;
+            res.status(200).send(`This is the research paper for ${id}`);
+        } catch (error) {
+            res.status(404).send(error.message);
+        }
+    })
     
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
